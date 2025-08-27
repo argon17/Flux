@@ -11,12 +11,16 @@ public class Parser(List<Token> tokens)
         List<Stmt> statements = new();
         while (!IsAtEnd())
         {
-            statements.Add(ParseDeclaration());
+            Stmt? declaration = ParseDeclaration();
+            if (declaration != null)
+            {
+                statements.Add(declaration);
+            }
         }
         return statements;
     }
 
-    private Stmt ParseDeclaration()
+    private Stmt? ParseDeclaration()
     {
         try
         {
@@ -33,7 +37,7 @@ public class Parser(List<Token> tokens)
     private Stmt ParseVarDeclaration()
     {
         Token name = Consume(TokenType.Identifier, "Expect variable name.");
-        Expr initializer = null;
+        Expr? initializer = null;
         if (Match(TokenType.Equal))
         {
             initializer = ParseExpression();

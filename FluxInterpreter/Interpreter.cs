@@ -24,6 +24,7 @@ public class Interpreter : Expr.IVisitor<object?>, Stmt.IVisitor
     {
         try
         {
+            if (expression == null) return;
             object? value = Evaluate(expression);
             Console.WriteLine(Stringify(value));
         }

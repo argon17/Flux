@@ -1,3 +1,4 @@
+#nullable enable
 namespace FluxInterpreter;
 
 public abstract class Stmt
