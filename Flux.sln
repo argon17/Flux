@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluxInterpreter", "FluxInterpreter\FluxInterpreter.csproj", "{E361659A-4FAF-4685-A016-C93D8F4E9B3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AstGenerator", "AstGenerator\AstGenerator.csproj", "{7B5B6BB1-A156-4757-9476-2E0631DBC0D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluxInterpreter.Test", "FluxInterpreter.Test\FluxInterpreter.Test.csproj", "{F1CDB40F-1841-4C21-82CC-C81B535C573A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E361659A-4FAF-4685-A016-C93D8F4E9B3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E361659A-4FAF-4685-A016-C93D8F4E9B3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E361659A-4FAF-4685-A016-C93D8F4E9B3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E361659A-4FAF-4685-A016-C93D8F4E9B3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B5B6BB1-A156-4757-9476-2E0631DBC0D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B5B6BB1-A156-4757-9476-2E0631DBC0D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B5B6BB1-A156-4757-9476-2E0631DBC0D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B5B6BB1-A156-4757-9476-2E0631DBC0D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1CDB40F-1841-4C21-82CC-C81B535C573A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1CDB40F-1841-4C21-82CC-C81B535C573A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1CDB40F-1841-4C21-82CC-C81B535C573A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1CDB40F-1841-4C21-82CC-C81B535C573A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
