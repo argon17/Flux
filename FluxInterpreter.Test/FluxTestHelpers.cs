@@ -28,17 +28,21 @@ public static class FluxTestHelpers
     /// <returns>The captured console output as a string</returns>
     private static string CaptureOutput(Action action)
     {
-        var originalOut = Console.Out;
-        try
+        // Use lock to prevent concurrent access to Console.Out
+        lock (typeof(Console))
         {
-            using var stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);
-            action();
-            return stringWriter.ToString();
-        }
-        finally
-        {
-            Console.SetOut(originalOut);
+            var originalOut = Console.Out;
+            try
+            {
+                using var stringWriter = new StringWriter();
+                Console.SetOut(stringWriter);
+                action();
+                return stringWriter.ToString();
+            }
+            finally
+            {
+                Console.SetOut(originalOut);
+            }
         }
     }
 
