@@ -60,7 +60,7 @@ public class Interpreter : Expr.IVisitor<object?>, Stmt.IVisitor
 
         _environment.Define(stmt.Name, value);
     }
-    public object VisitVariableExpr(Expr.Variable expr)
+    public object? VisitVariableExpr(Expr.Variable expr)
     {
         return _environment.Get(expr.Name);
     }

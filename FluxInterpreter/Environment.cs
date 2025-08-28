@@ -4,11 +4,11 @@ public class Environment
 {
     private readonly Dictionary<Token, object?> _values = new();
 
-    internal object Get(Token varToken)
+    internal object? Get(Token varToken)
     {
         Token? foundToken = _values.Keys.FirstOrDefault(token => token.Lexeme == varToken.Lexeme);
         if (foundToken != null)
-            return _values[foundToken] ?? new object();
+            return _values[foundToken] ?? null;
         throw new RuntimeError(varToken, $"Undefined variable '{varToken}'.");
     }
 
