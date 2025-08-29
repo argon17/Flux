@@ -1,6 +1,6 @@
 namespace FluxInterpreter;
 
-public class Environment
+public class Environment(Environment? enclosing)
 {
     private readonly Dictionary<Token, object?> _values = new();
 
@@ -9,6 +9,7 @@ public class Environment
         Token? foundToken = _values.Keys.FirstOrDefault(token => token.Lexeme == varToken.Lexeme);
         if (foundToken != null)
             return _values[foundToken] ?? null;
+        if (enclosing != null) return enclosing.Get(varToken);
         throw new RuntimeError(varToken, $"Undefined variable '{varToken}'.");
     }
 
@@ -16,7 +17,8 @@ public class Environment
     {
         Token? alreadyDefinedToken = _values.Keys.FirstOrDefault(token => token.Lexeme == varToken.Lexeme);
         if (alreadyDefinedToken != null)
-            throw new RuntimeError(varToken, $"Variable '{varToken.Lexeme}' is already defined at line {alreadyDefinedToken.Line}.");
+            throw new RuntimeError(varToken,
+                $"Variable '{varToken.Lexeme}' is already defined at line {alreadyDefinedToken.Line}.");
         _values[varToken] = value;
     }
 }

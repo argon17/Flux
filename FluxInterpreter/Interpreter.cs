@@ -4,7 +4,7 @@ namespace FluxInterpreter;
 
 public class Interpreter : Expr.IVisitor<object?>, Stmt.IVisitor
 {
-    private readonly Environment _environment = new();
+    private Environment _environment = new(null);
     public void Interpret(List<Stmt> statements)
     {
         try
@@ -37,6 +37,28 @@ public class Interpreter : Expr.IVisitor<object?>, Stmt.IVisitor
     private void Execute(Stmt stmt)
     {
         stmt.Accept(this);
+    }
+
+    public void VisitBlockStmt(Stmt.Block stmt)
+    {
+        ExecuteBlock(stmt.Statements, new Environment(_environment));
+    }
+
+    private void ExecuteBlock(List<Stmt> statements, Environment environment)
+    {
+        Environment current = _environment;
+        try
+        {
+            _environment = environment;
+            foreach (Stmt stmt in statements)
+            {
+                Execute(stmt);
+            }
+        }
+        finally
+        {
+            _environment = current;
+        }
     }
 
     public void VisitfcExpressionStmt(Stmt.fcExpression stmt)

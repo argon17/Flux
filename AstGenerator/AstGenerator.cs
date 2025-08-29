@@ -15,6 +15,7 @@ public static class AstGenerator
         
         DefineAst(args[0], "Stmt",
         [
+            "Block: List<Stmt> statements",
             "fcExpression: Expr expression",
             "Print: Expr expression",
             "Var: Token name, Expr? initializer",

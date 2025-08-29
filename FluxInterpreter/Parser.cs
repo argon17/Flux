@@ -49,7 +49,23 @@ public class Parser(List<Token> tokens)
     private Stmt ParseStatement()
     {
         if (Match(TokenType.Print)) return ParsePrintStatement();
+        if (Match(TokenType.LeftBrace)) return new Stmt.Block(ParseBlock());
         return ParseExpressionStatement();
+    }
+
+    private List<Stmt> ParseBlock()
+    {
+        List<Stmt> statements = new();
+        while (!Check(TokenType.RightBrace) && !IsAtEnd())
+        {
+            Stmt? stmt = ParseDeclaration();
+            if(stmt != null)
+            {
+                statements.Add(stmt);
+            }
+        }
+        Consume(TokenType.RightBrace, "Expect '}' after block.");
+        return statements;
     }
 
     private Stmt ParseExpressionStatement()
