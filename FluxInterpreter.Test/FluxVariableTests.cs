@@ -110,9 +110,9 @@ public class FluxVariableTests
         // Assert
         string[] lines = output.Trim().Split('\n', StringSplitOptions.RemoveEmptyEntries);
         Assert.Equal(3, lines.Length);
-        Assert.Equal("8", lines[0].Trim());   // 5 + 3
-        Assert.Equal("15", lines[1].Trim());  // 5 * 3
-        Assert.Equal("2", lines[2].Trim());   // 5 - 3
+        Assert.Equal("8", lines[0].Trim()); // 5 + 3
+        Assert.Equal("15", lines[1].Trim()); // 5 * 3
+        Assert.Equal("2", lines[2].Trim()); // 5 - 3
     }
 
     [Fact]
@@ -135,11 +135,11 @@ public class FluxVariableTests
     {
         // Arrange & Act: Test variable redeclaration (should work)
         string output = FluxTestHelpers.RunFluxCodeAndCaptureOutput("""
-            var x = 10;
-            print x;
-            var x = 20;
-            print x;
-        """);
+                                                                        var x = 10;
+                                                                        print x;
+                                                                        var x = 20;
+                                                                        print x;
+                                                                    """);
 
         // Assert
         string[] lines = output.Trim().Split('\n', StringSplitOptions.RemoveEmptyEntries);
@@ -197,21 +197,21 @@ public class FluxVariableTests
         // Assert
         string[] lines = output.Trim().Split('\n', StringSplitOptions.RemoveEmptyEntries);
         Assert.Equal(4, lines.Length);
-        Assert.Equal("True", lines[0].Trim());   // 10 > 5
-        Assert.Equal("False", lines[1].Trim());  // 10 < 5
-        Assert.Equal("True", lines[2].Trim());   // 10 == 10
-        Assert.Equal("True", lines[3].Trim());   // 5 != 10
+        Assert.Equal("True", lines[0].Trim()); // 10 > 5
+        Assert.Equal("False", lines[1].Trim()); // 10 < 5
+        Assert.Equal("True", lines[2].Trim()); // 10 == 10
+        Assert.Equal("True", lines[3].Trim()); // 5 != 10
     }
 
     [Fact]
     public void TestVariableWithStringConcatenation()
     {
         // Arrange & Act: Test string variables with concatenation
-        string output = FluxTestHelpers.RunFluxCodeAndCaptureOutput(@"
-            var first = ""Hello"";
-            var second = ""World"";
-            print first + "" "" + second;
-        ");
+        string output = FluxTestHelpers.RunFluxCodeAndCaptureOutput("""
+                                                                        var first = "Hello";
+                                                                        var second = "World";
+                                                                        print first + " " + second;
+                                                                    """);
 
         // Assert
         Assert.Equal("Hello World", output.Trim());
