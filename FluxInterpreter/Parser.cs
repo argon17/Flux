@@ -48,9 +48,26 @@ public class Parser(List<Token> tokens)
 
     private Stmt ParseStatement()
     {
+        if(Match(TokenType.If)) return ParseIfStatement();
         if (Match(TokenType.Print)) return ParsePrintStatement();
         if (Match(TokenType.LeftBrace)) return new Stmt.Block(ParseBlock());
         return ParseExpressionStatement();
+    }
+
+    private Stmt ParseIfStatement()
+    {
+        Consume(TokenType.LeftParen, "Expect '(' after 'if'.");
+        Expr condition = ParseExpression();
+        Consume(TokenType.RightParen, "Expect ')' after if condition.");
+
+        Stmt thenBranch = ParseStatement();
+        Stmt? elseBranch = null;
+        if (Match(TokenType.Else))
+        {
+            elseBranch = ParseStatement();
+        }
+
+        return new Stmt.If(condition, thenBranch, elseBranch);
     }
 
     private List<Stmt> ParseBlock()
@@ -84,9 +101,57 @@ public class Parser(List<Token> tokens)
 
     private Expr ParseExpression()
     {
-        return ParseEquality();
+        return ParseAssignment();
     }
-    
+
+    private Expr ParseAssignment()
+    {
+        Expr expr = ParseOr();
+        if (Match(TokenType.Equal))
+        {
+            Token equals = Previous();
+            Expr value = ParseAssignment();
+
+            if (expr is Expr.Variable variable)
+            {
+                Token name = variable.Name;
+                return new Expr.Assign(name, value);
+            }
+
+            Error(equals, "Invalid assignment target.");
+        }
+
+        return expr;
+    }
+
+    private Expr ParseOr()
+    {
+        Expr expr = ParseAnd();
+
+        while (Match(TokenType.Or))
+        {
+            Token operatorToken = Previous();
+            Expr right = ParseAnd();
+            expr = new Expr.Logical(expr, operatorToken, right);
+        }
+
+        return expr;
+    }
+
+    private Expr ParseAnd()
+    {
+        Expr expr = ParseEquality();
+
+        while (Match(TokenType.And))
+        {
+            Token operatorToken = Previous();
+            Expr right = ParseEquality();
+            expr = new Expr.Logical(expr, operatorToken, right);
+        }
+
+        return expr;
+    }
+
     private Expr ParseEquality()
     {
         Expr expr = ParseComparison();

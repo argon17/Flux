@@ -6,9 +6,11 @@ public static class AstGenerator
     {
         DefineAst(args[0], "Expr",
         [
+            "Assign: Token name, Expr value",
             "Binary: Expr left, Token @operator, Expr right",
             "Grouping: Expr expression",
             "Literal: Object value",
+            "Logical: Expr left, Token @operator, Expr right",
             "Unary: Token @operator, Expr right",
             "Variable: Token name",
         ]);
@@ -17,6 +19,7 @@ public static class AstGenerator
         [
             "Block: List<Stmt> statements",
             "fcExpression: Expr expression",
+            "If: Expr condition, Stmt thenBranch, Stmt? elseBranch",
             "Print: Expr expression",
             "Var: Token name, Expr? initializer",
         ], false);

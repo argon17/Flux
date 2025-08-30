@@ -21,4 +21,22 @@ public class Environment(Environment? enclosing)
                 $"Variable '{varToken.Lexeme}' is already defined at line {alreadyDefinedToken.Line}.");
         _values[varToken] = value;
     }
+
+    internal void Assign(Token varToken, object? value)
+    {
+        Token? foundToken = _values.Keys.FirstOrDefault(token => token.Lexeme == varToken.Lexeme);
+        if (foundToken != null)
+        {
+            _values[foundToken] = value;
+            return;
+        }
+
+        if (enclosing != null)
+        {
+            enclosing.Assign(varToken, value);
+            return;
+        }
+
+        throw new RuntimeError(varToken, $"Undefined variable '{varToken.Lexeme}'.");
+    }
 }
