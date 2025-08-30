@@ -4,7 +4,7 @@ public class Parser(List<Token> tokens)
 {
     private readonly List<Token> _tokens = tokens;
     private int _current = 0;
-    
+
 
     public List<Stmt> Parse()
     {
@@ -17,6 +17,7 @@ public class Parser(List<Token> tokens)
                 statements.Add(declaration);
             }
         }
+
         return statements;
     }
 
@@ -42,16 +43,83 @@ public class Parser(List<Token> tokens)
         {
             initializer = ParseExpression();
         }
+
         Consume(TokenType.Semicolon, "Expect ';' after variable declaration.");
         return new Stmt.Var(name, initializer);
     }
 
     private Stmt ParseStatement()
     {
-        if(Match(TokenType.If)) return ParseIfStatement();
+        if (Match(TokenType.For)) return ParseForStatement();
+        if (Match(TokenType.If)) return ParseIfStatement();
         if (Match(TokenType.Print)) return ParsePrintStatement();
+        if (Match(TokenType.While)) return ParseWhileStatement();
         if (Match(TokenType.LeftBrace)) return new Stmt.Block(ParseBlock());
         return ParseExpressionStatement();
+    }
+
+    private Stmt ParseForStatement()
+    {
+        Consume(TokenType.LeftParen, "Expect '(' after 'for'.");
+
+        Stmt? initializer;
+        if (Match(TokenType.Semicolon))
+        {
+            initializer = null;
+        }
+        else if (Match(TokenType.Var))
+        {
+            initializer = ParseVarDeclaration();
+        }
+        else
+        {
+            initializer = ParseExpressionStatement();
+        }
+
+        Expr? condition = null;
+        if (!Check(TokenType.Semicolon))
+        {
+            condition = ParseExpression();
+        }
+
+        Consume(TokenType.Semicolon, "Expect ';' after loop condition.");
+
+        Expr? increment = null;
+        if (!Check(TokenType.RightParen))
+        {
+            increment = ParseExpression();
+        }
+
+        Consume(TokenType.RightParen, "Expect ')' after for clauses.");
+
+        Stmt body = ParseStatement();
+        if (increment != null)
+        {
+            body = new Stmt.Block([
+                body,
+                new Stmt.fcExpression(increment)
+            ]);
+        }
+
+        condition ??= new Expr.Literal(true);
+        body = new Stmt.While(condition, body);
+
+        if (initializer != null)
+        {
+            body = new Stmt.Block([initializer, body]);
+        }
+
+        return body;
+    }
+
+    private Stmt ParseWhileStatement()
+    {
+        Consume(TokenType.LeftParen, "Expect '(' after 'while'.");
+        Expr condition = ParseExpression();
+        Consume(TokenType.RightParen, "Expect ')' after condition.");
+        Stmt body = ParseStatement();
+
+        return new Stmt.While(condition, body);
     }
 
     private Stmt ParseIfStatement()
@@ -76,11 +144,12 @@ public class Parser(List<Token> tokens)
         while (!Check(TokenType.RightBrace) && !IsAtEnd())
         {
             Stmt? stmt = ParseDeclaration();
-            if(stmt != null)
+            if (stmt != null)
             {
                 statements.Add(stmt);
             }
         }
+
         Consume(TokenType.RightBrace, "Expect '}' after block.");
         return statements;
     }
@@ -165,7 +234,7 @@ public class Parser(List<Token> tokens)
 
         return expr;
     }
-    
+
     private Expr ParseComparison()
     {
         Expr expr = ParseTerm();
@@ -179,7 +248,7 @@ public class Parser(List<Token> tokens)
 
         return expr;
     }
-    
+
     private Expr ParseTerm()
     {
         Expr expr = ParseFactor();
@@ -193,7 +262,7 @@ public class Parser(List<Token> tokens)
 
         return expr;
     }
-    
+
     private Expr ParseFactor()
     {
         Expr expr = ParseUnary();
@@ -207,7 +276,7 @@ public class Parser(List<Token> tokens)
 
         return expr;
     }
-    
+
     private Expr ParseUnary()
     {
         if (Match(TokenType.Neg, TokenType.Minus))
@@ -219,7 +288,7 @@ public class Parser(List<Token> tokens)
 
         return ParsePrimary();
     }
-    
+
     private Expr ParsePrimary()
     {
         if (Match(TokenType.False)) return new Expr.Literal(false);
@@ -245,7 +314,7 @@ public class Parser(List<Token> tokens)
 
         throw Error(Peek(), "Expect expression.");
     }
-    
+
     private bool Match(params TokenType[] types)
     {
         foreach (TokenType type in types)
@@ -259,47 +328,47 @@ public class Parser(List<Token> tokens)
 
         return false;
     }
-    
+
     private Token Consume(TokenType type, string message)
     {
         if (Check(type)) return Advance();
 
         throw Error(Peek(), message);
     }
-    
+
     private bool Check(TokenType type)
     {
         if (IsAtEnd()) return false;
         return Peek().Type == type;
     }
-    
+
     private Token Advance()
     {
         if (!IsAtEnd()) _current++;
         return Previous();
     }
-    
+
     private bool IsAtEnd()
     {
         return Peek().Type == TokenType.Eof;
     }
-    
+
     private Token Peek()
     {
         return _tokens[_current];
     }
-    
+
     private Token Previous()
     {
         return _tokens[_current - 1];
     }
-    
+
     private ParseError Error(Token token, string message)
     {
         Flux.Error(token, message);
         return new ParseError();
     }
-    
+
     private void Synchronize()
     {
         Advance();
