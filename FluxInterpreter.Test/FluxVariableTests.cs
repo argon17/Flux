@@ -1,5 +1,3 @@
-using FluxInterpreter;
-
 namespace FluxInterpreter.Test;
 
 public class FluxVariableTests
